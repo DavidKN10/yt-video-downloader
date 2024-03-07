@@ -27,7 +27,7 @@ def download_youtube_video(url, save_path):
 
         #download stream to the specified path
         stream.download(output_path=save_path, filename=f"{video_title}.mp4")
-        print(f"Video downloaded successfully! Saved as '{video_title}.jpg'")
+        print(f"Video downloaded successfully! Saved as '{video_title}.mp4'")
 
     except Exception as e:
         print("An error occurred:", str(e))
