@@ -2,7 +2,9 @@
 
 ---
 
-![window image](markdown files/window.jpg "window")
+<p>
+    <img src="markdown files/window.jpg">
+</p>
 
 ### Overview
 
@@ -62,7 +64,10 @@ Now open the pyton file in the command line:
 C:(directory)>python yt2mp4_console.py
 ```
 The python file should now be open and you can start downloading videos.
-![console](markdown files/console.jpg "console")
+<p>
+    <img src="markdown files/console.jpg">
+</p>
+
 
 
 ### How to Use the GUI App
@@ -80,7 +85,10 @@ When you click on "submit", the video and thumbnail will start downloading.
 
 Once the video downloads, you will get the following window:
 
-![message box image](markdown files/message box.jpg "message box")
+<p>
+    <img src="markdown files/message box.jpg">
+</p>
+
 
 If you click "Yes", the message window will close and you can continue downloading more videos.
 If you click "No", the message box will close and you will exit the program.
