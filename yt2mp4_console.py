@@ -2,17 +2,20 @@ from pytube import YouTube
 from pythumb import Thumbnail
 import os
 
-
+#function to remove invalid characters from a video title so that it can be properly downloaded
 def clean_filename(filename):
-    #remove invalid characters from a video title so that it can be properly downloaded
+    #make a set of invalid characters
     invalid_chars = r'\/:*?<>|"'
     invalid_characters = set(invalid_chars)
 
+    #make a new string with invalid characters removed
+    #if the character is in the set of invalid_characters, then it will be replaced with '_'
     cleaned_text = ''.join(['_' if char in invalid_characters else char for char in filename])
 
+    #return the file name with invalid characters removed
     return cleaned_text
 
-
+#function to download the youtube video given the url and download path
 def download_youtube_video(url, save_path):
     try:
         #create a YouTube object
@@ -32,7 +35,7 @@ def download_youtube_video(url, save_path):
     except Exception as e:
         print("An error occurred:", str(e))
 
-
+#function to download the YouTube video thumbnail given the url and download path
 def download_youtube_thumbnail(url, save_path):
     try:
         #create YouTube object
@@ -41,8 +44,11 @@ def download_youtube_thumbnail(url, save_path):
         # get the video title
         thumbnail_filename = clean_filename(yt.title)
 
+        #get highest resolution of thumbnail, maxresdefault
         thumbnail = Thumbnail(url)
         thumbnail.fetch(size="maxresdefault")
+
+        #save thumbnail to the specified save path
         thumbnail.save(dir=save_path, filename=thumbnail_filename)
 
         print(f"Thumbnail downloaded successfully! Saved as '{thumbnail_filename}.jpg'")
@@ -53,19 +59,26 @@ def download_youtube_thumbnail(url, save_path):
 
 if __name__=="__main__":
 
+    #while loop to continue downloading videos until told otherwise
     while True:
+        #input url, save path, and give option to download thumbnail
         video_url= input("Enter the YouTube video URL: ")
         save_path = input("Enter the path to save the video: ")
         save_thumbnail = input("Do you want to save the thumbnail? (Y/N): ").strip().upper()
-
+        
         if not os.path.exists(save_path):
             os.makedirs(save_path)
 
+        #call function to download video
         download_youtube_video(video_url, save_path)
 
+        #if told yes to download thumbnail, call function to download thumbnail
         if save_thumbnail == "Y":
             download_youtube_thumbnail(video_url, save_path)
 
+        #option to download another video
+        #if yes, then continue whil loop
+        #if no, end loop and break
         download_again = input("\nDo you want to download another video? (Y/N): ").strip().upper()
 
         if download_again != "Y":
