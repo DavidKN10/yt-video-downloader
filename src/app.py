@@ -38,3 +38,14 @@ def submit():
         if answer:
             break
 
+
+window = Tk()
+window.iconbitmap("V33983897_on_X.ico")
+window.geometry('530x500')
+window.minsize(530, 300)
+window.maxsize(530,300)
+window.title("YouTube to mp4 by Noaxadd")
+
+
+
+window.mainloop()
