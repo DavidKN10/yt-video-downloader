@@ -118,7 +118,7 @@ After entering yor option, the console will print out the name of the video with
 Then the console will tell you if the video and thumbnail were downloaded successfully. 
 If the video did not download successfully, it will tell you what error it encountered. 
 ```commandline
-Enter the YouTube video URL: (URL goess here)
+Enter the YouTube video URL: (URL goes here)
 Enter the path to save the video: (path goes here)
 Do you want to save the thumbnail? (Y/N):
 Video Title: (title will be printed here)
