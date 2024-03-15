@@ -35,7 +35,7 @@ def submit():
             os.makedirs(save_path)
 
         #call the function from yt_to_mpy.py to download video
-        download_youtube_video(video_url, save_path)
+        download_youtube_mp4(video_url, save_path)
 
         #if the option to save thumbnail was yes, save thumbnail
         if save_thumbnail == "Yes":

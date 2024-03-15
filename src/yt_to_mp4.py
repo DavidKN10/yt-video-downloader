@@ -16,8 +16,8 @@ def clean_filename(filename):
     return cleaned_text
 
 
-#function to download the youtube video given the url and download path
-def download_youtube_video(url, save_path):
+#function to download the YouTube video as mp4given the url and download path
+def download_youtube_mp4(url, save_path):
     try:
         #create a YouTube object
         yt = YouTube(url)
@@ -35,7 +35,25 @@ def download_youtube_video(url, save_path):
         print("An error occurred:", str(e))
 
 
-#function to download the youtube video thumbnail given the url and download path
+#function to download the YouTube video as mp3 given the url and download path
+def download_youtube_mp3(url, save_path):
+    try:
+        #create a YouTube object
+        yt = YouTube(url)
+
+        #get the video title
+        video_title = clean_filename(yt.title)
+
+        #choose the highest resolution stream
+        stream = yt.streams.get_highest_resolution()
+
+        #download stream to the specified path
+        stream.download(output_path=save_path, filename=f"{video_title}.mp3")
+    except Exception as e:
+        print("An error occurred:", str(e))
+
+
+#function to download the YouTube video thumbnail given the url and download path
 def download_youtube_thumbnail(url, save_path):
     try:
         #create YouTube object
