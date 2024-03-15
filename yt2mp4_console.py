@@ -2,6 +2,7 @@ from pytube import YouTube
 from pythumb import Thumbnail
 import os
 
+
 #function to remove invalid characters from a video title so that it can be properly downloaded
 def clean_filename(filename):
     #make a set of invalid characters
@@ -15,8 +16,9 @@ def clean_filename(filename):
     #return the file name with invalid characters removed
     return cleaned_text
 
-#function to download the youtube video given the url and download path
-def download_youtube_video(url, save_path):
+
+#function to download the YouTube video as mp4 given the url and download path
+def download_youtube_mp4(url, save_path):
     try:
         #create a YouTube object
         yt = YouTube(url)
@@ -35,6 +37,28 @@ def download_youtube_video(url, save_path):
     except Exception as e:
         print("An error occurred:", str(e))
 
+
+#function to download the YouTube video as mp3 given the url and download path
+def download_youtube_mp3(url, save_path):
+    try:
+        #create a YouTube object
+        yt = YouTube(url)
+
+        #get video title
+        video_title = clean_filename(yt.title)
+        print("Video Title: ", video_title)
+
+        #choose the highest resolution stream
+        stream = yt.streams.get_highest_resolution()
+
+        #download stream to the specified path
+        stream.download(output_path=save_path, filename=f"{video_title}.mp3")
+        print(f"Video downloaded successfully! Save as '{video_title}.mp3'")
+
+    except Exception as e:
+        print("An error occurred: ", str(e))
+
+
 #function to download the YouTube video thumbnail given the url and download path
 def download_youtube_thumbnail(url, save_path):
     try:
@@ -44,7 +68,7 @@ def download_youtube_thumbnail(url, save_path):
         # get the video title
         thumbnail_filename = clean_filename(yt.title)
 
-        #get highest resolution of thumbnail, maxresdefault
+        #get the highest resolution of thumbnail, maxresdefault
         thumbnail = Thumbnail(url)
         thumbnail.fetch(size="maxresdefault")
 
@@ -63,21 +87,27 @@ if __name__=="__main__":
     while True:
         #input url, save path, and give option to download thumbnail
         video_url= input("Enter the YouTube video URL: ")
+        format = input("Etner the video format(mp4/mp3): ")
         save_path = input("Enter the path to save the video: ")
         save_thumbnail = input("Do you want to save the thumbnail? (Y/N): ").strip().upper()
         
         if not os.path.exists(save_path):
             os.makedirs(save_path)
 
-        #call function to download video
-        download_youtube_video(video_url, save_path)
+        #check if format is mp3 or mp4
+        if format == "mp4":
+            # call function to download video
+            download_youtube_mp4(video_url, save_path)
+        elif format == "mp3":
+            # call function to download video
+            download_youtube_mp3(video_url, save_path)
 
         #if told yes to download thumbnail, call function to download thumbnail
         if save_thumbnail == "Y":
             download_youtube_thumbnail(video_url, save_path)
 
         #option to download another video
-        #if yes, then continue whil loop
+        #if yes, then continue while loop
         #if no, end loop and break
         download_again = input("\nDo you want to download another video? (Y/N): ").strip().upper()
 
