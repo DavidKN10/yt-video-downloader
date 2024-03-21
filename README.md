@@ -24,6 +24,7 @@ There is also a different version of this program that allows you to use it in t
 
 * download a YouTube video to the highest resolution
 * option to download the thumbnail of the video
+* download as either MP3 or MP4
 * choose location of where you want to save the files
 
 ### How to Set Up GUI App
@@ -80,6 +81,8 @@ and you can go to the folder where you want to save the video.
 Next to "Save Thumbnail?" you will see a dropdown menu that will give you the options
 "Yes" and "No". If "Yes" is chosen, the thumbnail will be saved on the same location 
 where you are saving the video. If "No" is chosen, the thumbnail will not be saved. 
+Now, in the "Choose a Format" dropdown menu, you can choose between MP3 or MP4 and the 
+video will be saved in that format. 
 
 When you click on "submit", the video and thumbnail will start downloading.
 
@@ -105,12 +108,20 @@ Copy and paste the URL and hit enter.
 Now you will be prompted to enter the directory to save the file.
 ```commandline
 Enter the YouTube video URL: (URL goess here)
+Enter the video format(mp4/mp3): (format goes here)
+```
+After entering the format, you will be prompted to enter the 
+directory to save the file. 
+```commandline
+Enter the YouTube video URL: (URL goess here)
+Enter the video format(mp4/mp3): (format goes here)
 Enter the path to save the video: (path goes here)
 ```
-After entering the save path, you will be asked if you want to save the thumbnail.
+After choosing the directory, you will be asked if you want to save the thumbnail.
 If you type "Y" or "y", the thumbnail will be saved. You can type anything else to decline.
 ```commandline
 Enter the YouTube video URL: (URL goess here)
+Enter the video format(mp4/mp3): (format goes here)
 Enter the path to save the video: (path goes here)
 Do you want to save the thumbnail? (Y/N):
 ```
@@ -119,6 +130,7 @@ Then the console will tell you if the video and thumbnail were downloaded succes
 If the video did not download successfully, it will tell you what error it encountered. 
 ```commandline
 Enter the YouTube video URL: (URL goes here)
+Enter the video format(mp4/mp3): (format goes here)
 Enter the path to save the video: (path goes here)
 Do you want to save the thumbnail? (Y/N):
 Video Title: (title will be printed here)
