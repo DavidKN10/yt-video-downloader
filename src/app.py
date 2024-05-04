@@ -163,7 +163,7 @@ window.iconbitmap("V33983897_on_X.ico")
 window.geometry('530x500')
 window.minsize(530, 400)
 window.maxsize(530,400)
-window.title("YouTube to mp4 by Noaxadd")
+window.title("YouTube Downloader by Noaxadd")
 
 #labels at the top of window that give instructions
 message = Label(window, text="Welcome!")
