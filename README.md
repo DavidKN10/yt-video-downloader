@@ -39,7 +39,7 @@ You can make a shortcut of the .exe file and move that shortcut outside the fold
 
 ---
 
-On my [github repo](https://github.com/DavidKN10/yt-video-downloader), download "yt2mp4_console.py"
+Download "yt2mp4_console.py"
 
 Make sure you also have [python](https://www.python.org/downloads/), pytube, and pythumb installed.
 
@@ -64,12 +64,6 @@ Now open the pyton file in the command line:
 ```commandline
 C:(directory)>python yt2mp4_console.py
 ```
-The python file should now be open and you can start downloading videos.
-<p>
-    <img src="markdown files/console.jpg">
-</p>
-
-
 
 ### How to Use the GUI App
 
@@ -83,6 +77,10 @@ Next to "Save Thumbnail?" you will see a dropdown menu that will give you the op
 where you are saving the video. If "No" is chosen, the thumbnail will not be saved. 
 Now, in the "Choose a Format" dropdown menu, you can choose between MP3 or MP4 and the 
 video will be saved in that format. 
+
+<p>
+    <img src="markdown files/window.jpg">
+</p>
 
 When you click on "submit", the video and thumbnail will start downloading.
 

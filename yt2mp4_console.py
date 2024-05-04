@@ -87,10 +87,10 @@ if __name__=="__main__":
     while True:
         #input url, save path, and give option to download thumbnail
         video_url= input("Enter the YouTube video URL: ")
-        format = input("Etner the video format(mp4/mp3): ")
         save_path = input("Enter the path to save the video: ")
         save_thumbnail = input("Do you want to save the thumbnail? (Y/N): ").strip().upper()
-        
+        format = input("Enter the video format(mp4/mp3): ")
+
         if not os.path.exists(save_path):
             os.makedirs(save_path)
 
