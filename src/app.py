@@ -35,6 +35,9 @@ def download_youtube_mp4(url, save_path):
         #get the video title
         video_title = clean_filename(yt.title)
 
+        title_video = Label(frame2, text=f"Video Title: {video_title}")
+        title_video.grid(row=1, column=0)
+
         #choose the highest resolution stream
         stream = yt.streams.get_highest_resolution()
 
@@ -53,6 +56,9 @@ def download_youtube_mp3(url, save_path):
 
         # get the video title
         video_title = clean_filename(yt.title)
+
+        title_video = Label(frame2, text=f"Video Title: {video_title}")
+        title_video.grid(row=1, column=0)
 
         # choose the highest resolution stream
         stream = yt.streams.get_highest_resolution()
@@ -219,16 +225,20 @@ submit_button.grid(row=3, column=2)
 for widget in message_frame.winfo_children():
     widget.grid_configure(padx=10, pady=5)
 
-#new frame to add the progress bar
+#new frame to add the progress bar and video title
 frame2 = Frame(window)
 frame2.place(x=55, y=275)
 message_frame2 = LabelFrame(frame2, text="Progress")
 message_frame2.grid(row=0, column=0)
 
+title_video = Label(frame2, text="")
+title_video.grid(row=1, column=0)
+
 percent_label = Label(frame2, text="0%")
-percent_label.grid(row=1, column=0)
+percent_label.grid(row=2, column=0)
+
 #progress bar
 progress_bar = ttk.Progressbar(frame2, orient=HORIZONTAL, length=400, mode='determinate')
-progress_bar.grid(row=2, column=0, padx=10, pady=10)
+progress_bar.grid(row=3, column=0, padx=10, pady=10)
 
 window.mainloop()
