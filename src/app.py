@@ -45,7 +45,8 @@ def download_youtube_mp4(url, save_path):
         stream.download(output_path=save_path, filename=f"{video_title}.mp4")
 
     except Exception as e:
-        print("An error occurred:", str(e))
+        messagebox.showerror(title="Error",
+                             message=f"Error: {e}")
 
 
 # function to download the YouTube video as mp3 given the url and download path
@@ -66,7 +67,8 @@ def download_youtube_mp3(url, save_path):
         # download stream to the specified path
         stream.download(output_path=save_path, filename=f"{video_title}.mp3")
     except Exception as e:
-        print("An error occurred:", str(e))
+        messagebox.showerror(title="Error",
+                             message=f"Error: {e}")
 
 
 def on_progress(stream, chunk, bytes_remaining):
@@ -98,7 +100,8 @@ def download_youtube_thumbnail(url, save_path):
         thumbnail.save(dir=save_path, filename=thumbnail_filename)
 
     except Exception as e:
-        print("An error occurred:", str(e))
+        messagebox.showerror(title="Error",
+                             message=f"Error: {e}")
 
 
 #function that will work alongside the 'choose location' button
