@@ -3,6 +3,7 @@ from tkinter import filedialog, messagebox, ttk
 from tkinter.ttk import Combobox
 from pytube import YouTube
 from pythumb import Thumbnail
+from PIL import ImageTk,Image
 import os
 
 
@@ -35,8 +36,8 @@ def download_youtube_mp4(url, save_path):
         #get the video title
         video_title = clean_filename(yt.title)
 
-        title_video = Label(frame2, text=f"Video Title: {video_title}")
-        title_video.grid(row=1, column=0)
+        title_video_label = Label(frame2, text=f"Video Title: {video_title}", font=("", 15))
+        title_video_label.grid(row=2, column=0)
 
         #choose the highest resolution stream
         stream = yt.streams.get_highest_resolution()
@@ -60,6 +61,9 @@ def download_youtube_mp3(url, save_path):
 
         title_video = Label(frame2, text=f"Video Title: {video_title}")
         title_video.grid(row=1, column=0)
+
+        title_video_label = Label(frame2, text=f"Video Title: {video_title}")
+        title_video_label.grid(row=2, column=0)
 
         # choose the highest resolution stream
         stream = yt.streams.get_highest_resolution()
@@ -136,6 +140,16 @@ def submit():
         if not os.path.exists(save_path):
             os.makedirs(save_path)
 
+        download_youtube_thumbnail(url, save_path)
+        yt = YouTube(url, on_progress_callback=on_progress)
+        video_title = clean_filename(yt.title)
+
+        canvas = Canvas(frame2, height=300, width=500)
+        canvas.grid(row=1, column=0)
+        img = Image.open(f"{save_path}/{video_title}.jpg").resize((500, 300))
+        imgTK = ImageTk.PhotoImage(img)
+        canvas.create_image(20, 20, anchor=NW, image=imgTK)
+
         #if the option to save thumbnail was yes, save thumbnail
         if save_thumbnail == "Yes":
             download_youtube_thumbnail(video_url, save_path)
@@ -166,47 +180,48 @@ def submit():
             break
 
 
+
 window = Tk()
 #making the icon, window, and title
 window.iconbitmap("V33983897_on_X.ico")
-window.geometry('530x500')
-window.minsize(530, 400)
-window.maxsize(530,400)
+window.geometry('800x800')
+window.minsize(800, 800)
+window.maxsize(800,800)
 window.title("YouTube Downloader by Noaxadd")
 
 #labels at the top of window that give instructions
-message = Label(window, text="Welcome!")
-message.place(x=5, y=0)
-message = Label(window, text="Enter a YouTube video URL and the video will be saved to your local storage")
-message.place(x=5, y=30)
+message = Label(window, text="Welcome!", font=("", 20))
+message.place(x=300, y=0)
+message = Label(window, text="Enter a YouTube video URL and the video will be saved to your local storage", font=("", 15))
+message.place(x=60, y=30)
 
 #Frame for video info
 #this is the place where you will input all the information of the video
 frame = Frame(window)
-frame.place(x=55, y=70)
-message_frame = LabelFrame(frame, text="Video Info")
+frame.place(x=100, y=70)
+message_frame = LabelFrame(frame, text="Video Info", font=("", 15))
 message_frame.grid(row=0, column=0)
 
 #label for choosing location
-test = Label(message_frame, text="Choose location to save video")
+test = Label(message_frame, text="Choose location to save video", font=("", 15))
 test.grid(row=1, column=0)
 
 #button that when clicked, it will open a window to choose a save location
-test2=Button(message_frame, text="choose location", command=choose_location)
+test2=Button(message_frame, text="choose location", command=choose_location, font=("", 15))
 test2.grid(row=1, column=1)
 
 #label for entry box where you will type the url
-url_label = Label(message_frame, text="Enter YouTube video URL")
+url_label = Label(message_frame, text="Enter YouTube video URL", font=("", 15))
 url_label.grid(row=0,column=0)
 
 #entry box where you will type the url
-url_entry = Entry(message_frame)
+url_entry = Entry(message_frame, font=("", 15), width=18)
 url_entry.grid(row=0, column=1)
 
 x = IntVar()
 
 #label for saving the thumbnail option
-check_button = Label(message_frame, text="Save Thumbnail?")
+check_button = Label(message_frame, text="Save Thumbnail?", font=("", 15))
 
 #combobox that gives the option yes or no
 check_button_combobox = Combobox(message_frame, values=["Yes", "No"])
@@ -214,7 +229,7 @@ check_button.grid(row=2, column=0)
 check_button_combobox.grid(row=2, column=1)
 
 #label for choosing format
-format_button = Label(message_frame, text="Choose a Format")
+format_button = Label(message_frame, text="Choose a Format", font=("", 15))
 
 #combobox that lets you choose between mp3 or mp4
 format_button_combobox = Combobox(message_frame, values=["MP3", "MP4"])
@@ -222,7 +237,7 @@ format_button.grid(row=3, column=0)
 format_button_combobox.grid(row=3, column=1)
 
 #button that when clicked, it will execute the 'submit' function and download the video
-submit_button = Button(message_frame, text='submit', command=submit)
+submit_button = Button(message_frame, text='submit', command=submit, font=("", 15))
 submit_button.grid(row=3, column=2)
 
 for widget in message_frame.winfo_children():
@@ -230,18 +245,24 @@ for widget in message_frame.winfo_children():
 
 #new frame to add the progress bar and video title
 frame2 = Frame(window)
-frame2.place(x=55, y=275)
-message_frame2 = LabelFrame(frame2, text="Progress")
-message_frame2.grid(row=0, column=0)
+frame2.place(x=150, y=275)
+#message_frame2 = LabelFrame(frame2, text="Progress", font=("", 15))
+#message_frame2.grid(row=0, column=0)
 
-title_video = Label(frame2, text="")
-title_video.grid(row=1, column=0)
+canvas = Canvas(frame2, height=300, width=500)
+canvas.grid(row=1, column=0)
+img = Image.open(f"V33983897_on_X.jpg").resize((460, 300))
+imgTK = ImageTk.PhotoImage(img)
+canvas.create_image(20, 20, anchor=NW, image=imgTK)
 
-percent_label = Label(frame2, text="0%")
-percent_label.grid(row=2, column=0)
+title_video = Label(frame2, text="", font=("", 15))
+title_video.grid(row=2, column=0)
+
+percent_label = Label(frame2, text="0%", font=("", 15))
+percent_label.grid(row=3, column=0)
 
 #progress bar
 progress_bar = ttk.Progressbar(frame2, orient=HORIZONTAL, length=400, mode='determinate')
-progress_bar.grid(row=3, column=0, padx=10, pady=10)
+progress_bar.grid(row=4, column=0, padx=10, pady=10)
 
 window.mainloop()
