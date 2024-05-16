@@ -150,9 +150,6 @@ def submit():
         imgTK = ImageTk.PhotoImage(img)
         canvas.create_image(20, 20, anchor=NW, image=imgTK)
 
-        #if the option to save thumbnail was yes, save thumbnail
-        if save_thumbnail == "Yes":
-            download_youtube_thumbnail(video_url, save_path)
         # check if format is mp3 or mp4
         if video_format == "MP4":
             # call function to download video
@@ -167,6 +164,11 @@ def submit():
         answer = messagebox.askyesno(title = "Message",
                                      message="Done. Do you want to download another video?",
                                      icon='info')
+
+        #if the option to save thumbnail was yes, save thumbnail
+        if save_thumbnail == "No":
+            os.remove(f"{save_path}/{video_title}.jpg")
+
 
         #if you click no, then close everything and end while loop
         if not answer:
@@ -191,7 +193,7 @@ window.title("YouTube Downloader by Noaxadd")
 
 #labels at the top of window that give instructions
 message = Label(window, text="Welcome!", font=("", 20))
-message.place(x=300, y=0)
+message.place(x=350, y=0)
 message = Label(window, text="Enter a YouTube video URL and the video will be saved to your local storage", font=("", 15))
 message.place(x=60, y=30)
 
@@ -255,10 +257,10 @@ img = Image.open(f"V33983897_on_X.jpg").resize((460, 300))
 imgTK = ImageTk.PhotoImage(img)
 canvas.create_image(20, 20, anchor=NW, image=imgTK)
 
-title_video = Label(frame2, text="", font=("", 15))
+title_video = Label(frame2, text="", font=("", 15), justify="center")
 title_video.grid(row=2, column=0)
 
-percent_label = Label(frame2, text="0%", font=("", 15))
+percent_label = Label(frame2, text="0%", font=("", 15), justify="center")
 percent_label.grid(row=3, column=0)
 
 #progress bar
