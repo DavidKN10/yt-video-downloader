@@ -36,7 +36,7 @@ def download_youtube_mp4(url, save_path):
         #get the video title
         video_title = clean_filename(yt.title)
 
-        title_video_label = Label(frame2, text=f"Video Title: {video_title}", font=("", 15))
+        title_video_label = Label(frame2, text=f"Video Title: {video_title}", font=("", 10))
         title_video_label.grid(row=2, column=0)
 
         #choose the highest resolution stream
@@ -171,14 +171,13 @@ def submit():
 
 
         #if you click no, then close everything and end while loop
-        if not answer:
-            window.quit()
-            break
-
         #if you click yes, end while loop only
         if answer:
             progress_bar['value'] = 0
             percent_label.configure(text="0%")
+            break
+        else:
+            window.quit()
             break
 
 
@@ -251,13 +250,15 @@ frame2.place(x=150, y=275)
 #message_frame2 = LabelFrame(frame2, text="Progress", font=("", 15))
 #message_frame2.grid(row=0, column=0)
 
+#to display the thumbnail on the window
+#has a placeholder image before download
 canvas = Canvas(frame2, height=300, width=500)
 canvas.grid(row=1, column=0)
 img = Image.open(f"V33983897_on_X.jpg").resize((460, 300))
 imgTK = ImageTk.PhotoImage(img)
 canvas.create_image(20, 20, anchor=NW, image=imgTK)
 
-title_video = Label(frame2, text="", font=("", 15), justify="center")
+title_video = Label(frame2, text="", font=("", 10), justify="center")
 title_video.grid(row=2, column=0)
 
 percent_label = Label(frame2, text="0%", font=("", 15), justify="center")
