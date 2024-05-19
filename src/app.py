@@ -5,6 +5,7 @@ from pytube import YouTube
 from pythumb import Thumbnail
 from PIL import ImageTk,Image
 import os
+import subprocess
 
 
 file_location = None    #variable for save path
@@ -25,6 +26,24 @@ def clean_filename(filename):
 
     #return the file name with invalid characters removed
     return cleaned_text
+
+
+def convertMP4ToMP3(input_file, output_file):
+    ffmpeg_cmd = [
+        "ffmpeg",
+        "-i", input_file,
+        "-vn",
+        "-acodec", "libmp3lame",
+        "-ab", "192k",
+        "-ar", "44100",
+        "-y",
+        output_file
+    ]
+
+    try:
+        subprocess.run(ffmpeg_cmd, check=True)
+    except subprocess.CalledProcessError as e:
+        messagebox.showinfo("Error", "ffmpeg command failed")
 
 
 #function to download the YouTube video as mp4 given the url and download path
@@ -53,23 +72,13 @@ def download_youtube_mp4(url, save_path):
 # function to download the YouTube video as mp3 given the url and download path
 def download_youtube_mp3(url, save_path):
     try:
-        # create a YouTube object
         yt = YouTube(url, on_progress_callback=on_progress)
-
-        # get the video title
         video_title = clean_filename(yt.title)
 
-        title_video = Label(frame2, text=f"Video Title: {video_title}")
-        title_video.grid(row=1, column=0)
+        download_youtube_mp4(url, save_path)
 
-        title_video_label = Label(frame2, text=f"Video Title: {video_title}")
-        title_video_label.grid(row=2, column=0)
+        convertMP4ToMP3(f"{save_path}/{video_title}.mp4", f"{save_path}/{video_title}.mp3")
 
-        # choose the highest resolution stream
-        stream = yt.streams.get_highest_resolution()
-
-        # download stream to the specified path
-        stream.download(output_path=save_path, filename=f"{video_title}.mp3")
     except Exception as e:
         messagebox.showerror(title="Error",
                              message=f"Error: {e}")
@@ -117,12 +126,12 @@ def choose_location():
 
 #function that will work alongside the 'submit' button
 def submit():
-    #get url from the entry box and save it to url    
+    #get url from the entry box and save it to url
     global url
     url = url_entry.get()
 
     #url to save the option that was chosen in the dropdown box
-    #will save the option into the variable save    
+    #will save the option into the variable save
     global save
     save = check_button_combobox.get()
 
@@ -157,6 +166,8 @@ def submit():
         elif video_format == "MP3":
             # call function to download video
             download_youtube_mp3(video_url, save_path)
+            os.remove(f"{save_path}/{video_title}.mp4")
+
 
         #When the video and thumbnail finish downloading, a message box will appear.
         #if you click yes, message box closes, and you can download another video
@@ -169,7 +180,6 @@ def submit():
         if save_thumbnail == "No":
             os.remove(f"{save_path}/{video_title}.jpg")
 
-
         #if you click no, then close everything and end while loop
         #if you click yes, end while loop only
         if answer:
@@ -179,7 +189,6 @@ def submit():
         else:
             window.quit()
             break
-
 
 
 window = Tk()
