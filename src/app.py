@@ -168,7 +168,6 @@ def submit():
             download_youtube_mp3(video_url, save_path)
             os.remove(f"{save_path}/{video_title}.mp4")
 
-
         #When the video and thumbnail finish downloading, a message box will appear.
         #if you click yes, message box closes, and you can download another video
         #if you click no, message box closes and window closes as well
