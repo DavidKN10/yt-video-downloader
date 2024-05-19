@@ -4,7 +4,9 @@ from tkinter.ttk import Combobox
 from pytube import YouTube
 from pythumb import Thumbnail
 from PIL import ImageTk,Image
-import os, subprocess
+import os
+import subprocess
+
 
 file_location = None    #variable for save path
 url = None              #variable for url
@@ -76,7 +78,6 @@ def download_youtube_mp3(url, save_path):
         download_youtube_mp4(url, save_path)
 
         convertMP4ToMP3(f"{save_path}/{video_title}.mp4", f"{save_path}/{video_title}.mp3")
-
 
     except Exception as e:
         messagebox.showerror(title="Error",
@@ -167,6 +168,7 @@ def submit():
             download_youtube_mp3(video_url, save_path)
             os.remove(f"{save_path}/{video_title}.mp4")
 
+
         #When the video and thumbnail finish downloading, a message box will appear.
         #if you click yes, message box closes, and you can download another video
         #if you click no, message box closes and window closes as well
@@ -178,7 +180,6 @@ def submit():
         if save_thumbnail == "No":
             os.remove(f"{save_path}/{video_title}.jpg")
 
-
         #if you click no, then close everything and end while loop
         #if you click yes, end while loop only
         if answer:
@@ -188,7 +189,6 @@ def submit():
         else:
             window.quit()
             break
-
 
 
 window = Tk()
