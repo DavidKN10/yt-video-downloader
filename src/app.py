@@ -4,6 +4,7 @@ from tkinter.ttk import Combobox
 from pytube import YouTube
 from pythumb import Thumbnail
 from PIL import ImageTk,Image
+import moviepy.editor as mp
 import os
 
 
@@ -53,23 +54,16 @@ def download_youtube_mp4(url, save_path):
 # function to download the YouTube video as mp3 given the url and download path
 def download_youtube_mp3(url, save_path):
     try:
-        # create a YouTube object
         yt = YouTube(url, on_progress_callback=on_progress)
-
-        # get the video title
         video_title = clean_filename(yt.title)
 
-        title_video = Label(frame2, text=f"Video Title: {video_title}")
-        title_video.grid(row=1, column=0)
+        download_youtube_mp4(url, save_path)
 
-        title_video_label = Label(frame2, text=f"Video Title: {video_title}")
-        title_video_label.grid(row=2, column=0)
+        video_file = mp.VideoFileClip(f"{save_path}/{video_title}.mp4")
+        video_file.audio.write_audiofile(f"{save_path}/{video_title}.mp3")
+        video_file.close()
+        os.remove(f"{save_path}/{video_title}.mp4")
 
-        # choose the highest resolution stream
-        stream = yt.streams.get_highest_resolution()
-
-        # download stream to the specified path
-        stream.download(output_path=save_path, filename=f"{video_title}.mp3")
     except Exception as e:
         messagebox.showerror(title="Error",
                              message=f"Error: {e}")
