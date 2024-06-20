@@ -13,7 +13,7 @@ url = None              #variable for url
 save = None             #variable for option to save thumbnail
 format = None           #variable for choosing a format
 
-
+title_video_label = None
 #function to remove invalid characters from a video title so that it can be properly downloaded
 def clean_filename(filename):
     #remove invalid characters
@@ -55,8 +55,8 @@ def download_youtube_mp4(url, save_path):
         #get the video title
         video_title = clean_filename(yt.title)
 
-        title_video_label = Label(frame2, text=f"Video Title: {video_title}", font=("", 10))
-        title_video_label.grid(row=2, column=0)
+        global title_video
+        title_video.config(text=f"{video_title}")
 
         #choose the highest resolution stream
         stream = yt.streams.get_highest_resolution()
@@ -184,6 +184,9 @@ def submit():
         if answer:
             progress_bar['value'] = 0
             percent_label.configure(text="0%")
+
+            global title_video
+            title_video.config(text="")
             break
         else:
             window.quit()
