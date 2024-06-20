@@ -59,16 +59,16 @@ def download_youtube_mp3(url, save_path):
     try:
         #create a YouTube object
         yt = YouTube(url)
-
-        #get video title
         video_title = clean_filename(yt.title)
-        print("Video Title: ", video_title)
 
         #choose the highest resolution stream
         stream = yt.streams.get_highest_resolution()
 
         #download stream to the specified path
-        stream.download(output_path=save_path, filename=f"{video_title}.mp3")
+        stream.download(output_path=save_path, filename=f"{video_title}.mp4")
+
+        convertMP4ToMP3(f"{save_path}/{video_title}.mp4",f"{save_path}/{video_title}.mp3")
+
         print(f"Video downloaded successfully! Save as '{video_title}.mp3'")
 
     except Exception as e:
