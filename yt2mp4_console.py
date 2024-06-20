@@ -1,7 +1,7 @@
 from pytube import YouTube
 from pythumb import Thumbnail
 import os
-
+import subprocess
 
 #function to remove invalid characters from a video title so that it can be properly downloaded
 def clean_filename(filename):
@@ -37,6 +37,22 @@ def download_youtube_mp4(url, save_path):
     except Exception as e:
         print("An error occurred:", str(e))
 
+def convertMP4ToMP3(input_file, output_file):
+    ffmpeg_cmd = [
+        "ffmpeg",
+        "-i", input_file,
+        "-vn",
+        "-acodec", "libmp3lame",
+        "-ab", "192k",
+        "-ar", "44100",
+        "-y",
+        output_file
+    ]
+
+    try:
+        subprocess.run(ffmpeg_cmd, check=True)
+    except subprocess.CalledProcessError as e:
+        print("Error", "ffmpeg command failed", e)
 
 #function to download the YouTube video as mp3 given the url and download path
 def download_youtube_mp3(url, save_path):
