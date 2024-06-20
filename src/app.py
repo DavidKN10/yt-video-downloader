@@ -13,7 +13,6 @@ url = None              #variable for url
 save = None             #variable for option to save thumbnail
 format = None           #variable for choosing a format
 
-title_video_label = None
 #function to remove invalid characters from a video title so that it can be properly downloaded
 def clean_filename(filename):
     #remove invalid characters
