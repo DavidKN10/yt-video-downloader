@@ -11,8 +11,7 @@
 ---
 
 This program allows you to download the video and thumbnail of a YouTube video.
-This program uses [pytube](https://github.com/pytube/pytube) to save the video 
-and [pythumb](https://github.com/alexitx/pythumb) to save the thumbnail. 
+This program uses python and the  [pytube](https://github.com/pytube/pytube) and [pythumb](https://github.com/alexitx/pythumb) libraries to save the video and thumbnail. 
 
 There is also a different version of this program that allows you to use it in the command line.
 
@@ -34,6 +33,22 @@ There is also a different version of this program that allows you to use it in t
 Once you have downloaded the folder, store it where ever you want. 
 However, make sure to keep the files on same location. Otherwise, you will encounter an error. 
 You can make a shortcut of the .exe file and move that shortcut outside the folder if you want.
+<br>
+
+Before you can use the app, you need to install ffmpeg.
+<br>
+
+1.) First, go to [Chocolatey](https://chocolatey.org/install) and follow the instructions to install it.
+<br>
+2.) Once you have Chocolatey installed, you can go to the console and type the following:
+```commandline
+choco install ffmpeg-full
+```
+<br>
+3.) You will be prompted to choose which scripts to run. Type "A" to run all. Let the installation finish. 
+<br>
+
+If you followed everything carefully, you should be able to use the applications now. 
 
 ### How to Set Up Command Line Program
 
