@@ -1,78 +1,78 @@
-from pytubefix import YouTube, Playlist
-from pytubefix.cli import on_progress
+from pytube import YouTube
 from pythumb import Thumbnail
 import os
 
 
+#function to remove invalid characters from a video title so that it can be properly downloaded
 def clean_filename(filename):
-    """
-    Removes invalid characters in the video title and replaces it with "_".
-    Used to set the file name as the video title.
-    """
+    #make a set of invalid characters
     invalid_chars = r'\/:*?<>|"'
     invalid_characters = set(invalid_chars)
 
+    #make a new string with invalid characters removed
+    #if the character is in the set of invalid_characters, then it will be replaced with '_'
     cleaned_text = ''.join(['_' if char in invalid_characters else char for char in filename])
 
+    #return the file name with invalid characters removed
     return cleaned_text
 
 
-def download_mp4(url, path):
-    """
-    Downloads video as MP4.
-    Make YouTube object, then get video title and use clean_filename() on the title.
-    Make a stream with the highest resolution and then display the video title.
-    Download video and print out results.
-    If an error occurrs, print exception.
-    """
+#function to download the YouTube video as mp4 given the url and download path
+def download_youtube_mp4(url, save_path):
     try:
+        #create a YouTube object
         yt = YouTube(url)
+
+        #get the video title
         video_title = clean_filename(yt.title)
+        print("Video Title: ", video_title)
+
+        #choose the highest resolution stream
         stream = yt.streams.get_highest_resolution()
 
-        print("Video Title: ", video_title)
+        #download stream to the specified path
+        stream.download(output_path=save_path, filename=f"{video_title}.mp4")
+        print(f"Video downloaded successfully! Saved as '{video_title}.mp4'")
 
-        stream.download(output_path=path, filename=f"{video_title}.mp4")
-        print("Video downloaded successfully!")
-        print("Saved as: {video_title}.mp4")
     except Exception as e:
-        print("An error occurred: ", str(e))
+        print("An error occurred:", str(e))
 
 
-def download_mp3(url, path):
-    """
-    Same as download_mp4(), but download as MP3.
-    """
+#function to download the YouTube video as mp3 given the url and download path
+def download_youtube_mp3(url, save_path):
     try:
+        #create a YouTube object
         yt = YouTube(url)
+
+        #get video title
         video_title = clean_filename(yt.title)
-        stream = yt.streams.get_audio_only()
-
         print("Video Title: ", video_title)
 
-        stream.download(output_path=path, filename=f"{video_title}.mp3", mp3=True)
-        print("Video downloaded successfully!")
-        print("Saved as: {video_title}.mp3")
+        #choose the highest resolution stream
+        stream = yt.streams.get_highest_resolution()
+
+        #download stream to the specified path
+        stream.download(output_path=save_path, filename=f"{video_title}.mp3")
+        print(f"Video downloaded successfully! Save as '{video_title}.mp3'")
+
     except Exception as e:
         print("An error occurred: ", str(e))
 
 
-def download_thumbnail(url, save_path):
-    """
-    Function to download the video thumbnail.
-    Make a YouTube object to get the title.
-    Make a Thumbnail object and get the highest resolution.
-    Download image and print result.
-    If an error occurs, print exception.
-    """
+#function to download the YouTube video thumbnail given the url and download path
+def download_youtube_thumbnail(url, save_path):
     try:
+        #create YouTube object
         yt = YouTube(url)
 
+        # get the video title
         thumbnail_filename = clean_filename(yt.title)
 
+        #get the highest resolution of thumbnail, maxresdefault
         thumbnail = Thumbnail(url)
         thumbnail.fetch(size="maxresdefault")
 
+        #save thumbnail to the specified save path
         thumbnail.save(dir=save_path, filename=thumbnail_filename)
 
         print(f"Thumbnail downloaded successfully! Saved as '{thumbnail_filename}.jpg'")
@@ -81,81 +81,35 @@ def download_thumbnail(url, save_path):
         print("An error occurred:", str(e))
 
 
-def download_playlist(url, path):
-    """
-    Function to download a full playlist.
-    Make a Playlist object. Then video is downloaded using the same logic as download_mp4(), but in a for loop.
-    If an error occurs, print exception.
-    """
-    try:
-        playlist = Playlist(url)
+if __name__=="__main__":
 
-        print("Playlist: {playlist.title}\n")
-
-        for video in playlist.videos:
-            video_title = clean_filename(video.title)
-            print(f"Downloading: {video_title}")
-            stream = video.streams.get_highest_resolution()
-            stream.download(output_path=path, filename=f"{video_title}.mp4")
-
-        print("Done. Playlist downloaded successfully!")
-
-    except Exception as e:
-        print("An error has occurred: ", str(e))
-
-
-"""
-First ask you are downloading a video or an entire playlist.
-
-If playlist:
-    - Enter URL
-    - Enter path to save video
-    - When done, ask you would like to download something else.
-        * If yes, then go back to choosing between video or playlist
-        * If no, then exit
-
-If video:
-    - Enter URL
-    - Enter path to save video
-    - Ask if you want to save thumbnail
-    - Ask if you want to save as MP3 or MP4
-    - When done, ask if you want to download something else
-
-"""
-if __name__ == "__main__":
+    #while loop to continue downloading videos until told otherwise
     while True:
+        #input url, save path, and give option to download thumbnail
+        video_url= input("Enter the YouTube video URL: ")
+        save_path = input("Enter the path to save the video: ")
+        save_thumbnail = input("Do you want to save the thumbnail? (Y/N): ").strip().upper()
+        format = input("Enter the video format(mp4/mp3): ")
 
-        video_or_playlist = input("Video or playlist? (V/P) > ").strip().upper()
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
 
-        if video_or_playlist == "P":
-            url = input("Enter playlist URL > ")
-            path = input("Enter path to save playlist > ")
+        #check if format is mp3 or mp4
+        if format == "mp4":
+            # call function to download video
+            download_youtube_mp4(video_url, save_path)
+        elif format == "mp3":
+            # call function to download video
+            download_youtube_mp3(video_url, save_path)
 
-            if not os.path.exists(path):
-                os.makedirs(path)
+        #if told yes to download thumbnail, call function to download thumbnail
+        if save_thumbnail == "Y":
+            download_youtube_thumbnail(video_url, save_path)
 
-            download_playlist(url, path)
-
-            download_again = input("\nDo you want to download something else? (Y/N) > ").strip().upper()
-
-        else:
-            url = input("Enter video URL > ")
-            path = input("Enter path to save video > ")
-            save_thumbnail = input("Do you want to save the thumbnail? (Y/N) > ").strip().upper()
-            format = input("Enter format to save video as (mp3/mp4) > ")
-
-            if not os.path.exists(path):
-                os.makedirs(path)
-
-            if format == "mp4":
-                download_mp4(url, path)
-            elif format == "mp3":
-                download_mp3(url, path)
-
-            if save_thumbnail == "Y":
-                download_thumbnail(url, path)
-
-            download_again = input("\nDo you want to download something else? (Y/N) > ").strip().upper()
+        #option to download another video
+        #if yes, then continue while loop
+        #if no, end loop and break
+        download_again = input("\nDo you want to download another video? (Y/N): ").strip().upper()
 
         if download_again != "Y":
             break
