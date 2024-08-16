@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import filedialog, messagebox, ttk
 from tkinter.ttk import Combobox
-from pytubefix import YouTube
+from pytubefix import YouTube, Playlist
 from pythumb import Thumbnail
 from PIL import ImageTk, Image
 import os
@@ -14,10 +14,6 @@ format = None
 
 
 def clean_filename(filename):
-    """
-    Removes invalid characters in the video title and replaces it with "_".
-    Used to set the file name as the video title.
-    """
     invalid_chars = r'\/:*?<>|"'
     invalid_characters = set(invalid_chars)
 
@@ -27,13 +23,6 @@ def clean_filename(filename):
 
 
 def download_mp4(url, path):
-    """
-    Downloads video as MP4.
-    Make YouTube object, then get video title and use clean_filename() on the title.
-    Make a stream with the highest resolution and then display the video title.
-    Download video and print out results.
-    If an error occurs, show an error window with a message.
-    """
     try:
         yt = YouTube(url, on_progress_callback=on_progress)
 
@@ -50,9 +39,6 @@ def download_mp4(url, path):
 
 
 def download_mp3(url, path):
-    """
-    Same as download_mp4(), but download as MP3.
-    """
     try:
         yt = YouTube(url, on_progress_callback=on_progress)
 
@@ -69,13 +55,6 @@ def download_mp3(url, path):
 
 
 def download_thumbnail(url, path):
-    """
-    Function to download the video thumbnail.
-    Make a YouTube object to get the title.
-    Make a Thumbnail object and get the highest resolution.
-    Download image and print result.
-    If an error occurs, show an error window with a message.
-    """
     try:
         yt = YouTube(url)
 
@@ -90,10 +69,20 @@ def download_thumbnail(url, path):
         messagebox.showerror(title="Error", message=f"Error: {e}")
 
 
+def download_playlist(url, path):
+    try:
+        playlist = Playlist(url)
+
+        for video in playlist.videos:
+            video_title = clean_filename(video.title)
+            stream = video.streams.get_highest_resolution()
+            stream.download(output_path=path, filename=f"{video_title}.mp4")
+
+    except Exception as e:
+        messagebox.showerror(title="Error", message=f"Error: {e}")
+
+
 def on_progress(stream, chunk, bytes_remaining):
-    """
-    Function used to update the progress bar when a video downloads.
-    """
     total_size = stream.filesize
     bytes_downloaded = total_size - bytes_remaining
     percent_complete = (bytes_downloaded / total_size) * 100
@@ -104,28 +93,11 @@ def on_progress(stream, chunk, bytes_remaining):
 
 
 def choose_location():
-    """
-    Open a window to choose a location to save the video.
-    """
     global file_location
     file_location = filedialog.askdirectory()
 
 
-def submit():
-    """
-    This function is used when the submit button is clicked.
-    First, it will download the thumbnail to display it in the window.
-    Then it will display the video title on the window.
-
-    If the format is mp4, save as mp4.
-    If the format is mp3, save as mp3.
-
-    Then a window will open telling you that the video finished download.
-    You are asked if you want to download something else.
-        - If yes, then the window closes and you can try again.
-        - If no, then the whole app exits.
-    If you decided to save the thumbnail, it will not be deleted.
-    """
+def submit_video():
     global url
     url = url_entry.get()
 
@@ -178,7 +150,34 @@ def submit():
             break
 
 
-# Main window
+def submit_playlist():
+    global url
+    url = p_url_entry.get()
+
+    while True:
+        playlist_url = url
+        save_path = file_location
+
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
+
+        download_playlist(playlist_url, save_path)
+
+        download_progress.config(text="Done")
+
+        answer = messagebox.askyesno(title="Message",
+                                     message="Done. Do you want to download something else?",
+                                     icon='info')
+
+        if answer:
+            download_progress.config(text="")
+            break
+        else:
+            window.quit()
+            break
+
+
+
 window = Tk()
 window.iconbitmap("V33983897_on_X.ico")
 window.geometry('800x800')
@@ -186,15 +185,23 @@ window.minsize(800, 800)
 window.maxsize(800, 800)
 window.title("YouTube Downloader by Noaxadd")
 
-#Labels
-message = Label(window, text="Welcome!", font=("", 20))
+notebook = ttk.Notebook(window)
+video_tab = Frame(notebook)
+playlist_tab = Frame(notebook)
+notebook.add(video_tab, text="Videos")
+notebook.add(playlist_tab, text="Playlists")
+notebook.pack(fill=BOTH, expand=YES)
+
+
+
+# ==================== Video tab ====================
+message = Label(video_tab, text="Welcome!", font=("", 20))
 message.place(x=350, y=0)
-message = Label(window, text="Enter a YouTube video URL and the video will be saved to your local storage",
+message = Label(video_tab, text="Enter a YouTube video URL and the video will be saved to your local storage",
                 font=("", 15))
 message.place(x=60, y=30)
 
-# Video info
-frame = Frame(window)
+frame = Frame(video_tab)
 frame.place(x=100, y=70)
 message_frame = LabelFrame(frame, text="Video Info", font=("", 15))
 message_frame.grid(row=0, column=0)
@@ -225,20 +232,17 @@ format_button_combobox = Combobox(message_frame, values=["MP3", "MP4"])
 format_button.grid(row=3, column=0)
 format_button_combobox.grid(row=3, column=1)
 
-submit_button = Button(message_frame, text='submit', command=submit, font=("", 15))
+submit_button = Button(message_frame, text='submit', command=submit_video, font=("", 15))
 submit_button.grid(row=3, column=2)
 
 for widget in message_frame.winfo_children():
     widget.grid_configure(padx=10, pady=5)
 
-# display thumbnail and video title
-frame2 = Frame(window)
+frame2 = Frame(video_tab)
 frame2.place(x=150, y=275)
 
 canvas = Canvas(frame2, height=300, width=500)
 canvas.grid(row=1, column=0)
-
-# placeholder image when opening for the first time
 img = Image.open(f"V33983897_on_X.jpg").resize((460, 300))
 imgTK = ImageTk.PhotoImage(img)
 canvas.create_image(20, 20, anchor=NW, image=imgTK)
@@ -246,11 +250,45 @@ canvas.create_image(20, 20, anchor=NW, image=imgTK)
 title_video = Label(frame2, text="", font=("", 10), justify="center")
 title_video.grid(row=2, column=0)
 
-# Progress bar
 percent_label = Label(frame2, text="0%", font=("", 15), justify="center")
 percent_label.grid(row=3, column=0)
 
+# progress bar
 progress_bar = ttk.Progressbar(frame2, orient=HORIZONTAL, length=400, mode='determinate')
 progress_bar.grid(row=4, column=0, padx=10, pady=10)
+
+
+
+# ==================== Playlist tab ====================
+p_message = Label(playlist_tab, text="Enter playlist URL and the videos will be saved",
+                  font=("",15))
+p_message.place(x=60, y=30)
+
+p_frame = Frame(playlist_tab)
+p_frame.place(x=90, y=70)
+p_message_frame = LabelFrame(p_frame, text="Playlist Info", font=("", 15))
+p_message_frame.grid(row=0, column=0)
+
+p_url_label = Label(p_message_frame, text="Enter Playlist URL", font=("",15))
+p_url_label.grid(row=0, column=0)
+p_url_entry = Entry(p_message_frame, font=("", 15), width=18)
+p_url_entry.grid(row=0, column=1)
+
+p_location_label = Label(p_message_frame, text="Choose location to save playlist", font=("",15))
+p_location_label.grid(row=1, column=0)
+p_location_button = Button(p_message_frame, text="choose location", command=choose_location, font=("",15))
+p_location_button.grid(row=1, column=1)
+
+p_submit_button = Button(p_message_frame, text='submit', command=submit_playlist, font=("", 15))
+p_submit_button.grid(row=1, column=2)
+
+for widget in p_message_frame.winfo_children():
+    widget.grid_configure(padx=10, pady=5)
+
+p_frame2 = Frame(playlist_tab)
+p_frame2.place(x=200, y=275)
+
+download_progress = Label(p_frame2, text="", font=("", 20), justify="center")
+download_progress.grid(row=1, column=0)
 
 window.mainloop()
