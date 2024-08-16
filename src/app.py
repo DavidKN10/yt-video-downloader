@@ -73,7 +73,10 @@ def download_playlist(url, path):
     try:
         playlist = Playlist(url)
 
+        global download_progress
+
         for video in playlist.videos:
+            download_progress.config(text=f"Downloading: {video.title}")
             video_title = clean_filename(video.title)
             stream = video.streams.get_highest_resolution()
             stream.download(output_path=path, filename=f"{video_title}.mp4")
@@ -162,8 +165,6 @@ def submit_playlist():
             os.makedirs(save_path)
 
         download_playlist(playlist_url, save_path)
-
-        download_progress.config(text="Done")
 
         answer = messagebox.askyesno(title="Message",
                                      message="Done. Do you want to download something else?",
@@ -286,9 +287,9 @@ for widget in p_message_frame.winfo_children():
     widget.grid_configure(padx=10, pady=5)
 
 p_frame2 = Frame(playlist_tab)
-p_frame2.place(x=200, y=275)
+p_frame2.place(x=100, y=275)
 
-download_progress = Label(p_frame2, text="", font=("", 20), justify="center")
+download_progress = Label(p_frame2, text="", font=("", 15), justify="center")
 download_progress.grid(row=1, column=0)
 
 window.mainloop()
