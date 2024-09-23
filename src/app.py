@@ -198,7 +198,7 @@ notebook.pack(fill=BOTH, expand=YES)
 # ==================== Video tab ====================
 message = Label(video_tab, text="Welcome!", font=("", 20))
 message.place(x=350, y=0)
-message = Label(video_tab, text="Enter a YouTube video URL and the video will be saved to your local storage",
+message = Label(video_tab, text="Enter a YouTube video URL to save to your local storage",
                 font=("", 15))
 message.place(x=60, y=30)
 
