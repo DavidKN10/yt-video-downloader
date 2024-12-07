@@ -34,7 +34,7 @@ def download_mp4(url, path):
 
         stream.download(output_path=path, filename=f"{video_title}.mp4")
         print("Video downloaded successfully!")
-        print("Saved as: {video_title}.mp4")
+        print(f"Saved as: {video_title}.mp4")
     except Exception as e:
         print("An error occurred: ", str(e))
 
@@ -52,7 +52,7 @@ def download_mp3(url, path):
 
         stream.download(output_path=path, filename=f"{video_title}.mp3", mp3=True)
         print("Video downloaded successfully!")
-        print("Saved as: {video_title}.mp3")
+        print(f"Saved as: {video_title}.mp3")
     except Exception as e:
         print("An error occurred: ", str(e))
 
