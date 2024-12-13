@@ -1,5 +1,4 @@
 from pytubefix import YouTube, Playlist
-from pytubefix.cli import on_progress
 from pythumb import Thumbnail
 import os
 import subprocess
@@ -21,9 +20,13 @@ def clean_filename(filename):
 def download_mp4(url, path):
     """
     Downloads video as MP4.
+    Since YouTube changed how some videos are downloaded, we need to download the video and audio separately.
     Make YouTube object, then get video title and use clean_filename() on the title.
-    Make a stream with the highest resolution and then display the video title.
-    Download video and print out results.
+    Make a tuple of streams that have video quality from 144p to 1080p.
+    To get the highest video quality, we use .first() since they are ordered from greatest to smallest.
+    Then download the vidoe and audio files.
+    Then call merge_audio_video() to merge the files into one.
+    Print results.  
     If an error occurrs, print exception.
     """
     try:
@@ -53,7 +56,11 @@ def download_mp4(url, path):
 
 def download_mp3(url, path):
     """
-    Same as download_mp4(), but download as MP3.
+    Downloads audio as mp3. 
+    Make YouTube object, then get video title and use clean_filename() on the title.
+    Make a stream and get the audio only and then display the video title.
+    Download audio and print out results.
+    If an error occurrs, print exception.
     """
     try:
         yt = YouTube(url)
@@ -70,6 +77,10 @@ def download_mp3(url, path):
 
 
 def merge_audio_video(video_file, audio_file, output_file):
+    """
+    Utilizes ffmpeg to merge audio and video files.
+    After merging is done, it delete the original video and audio files. 
+    """
     print("Merging audio and video")
 
     ffmpeg_cmd = [
@@ -122,7 +133,7 @@ def download_thumbnail(url, save_path):
 def download_playlist(url, path):
     """
     Function to download a full playlist.
-    Make a Playlist object. Then video is downloaded using the same logic as download_mp4(), but in a for loop.
+    Make a Playlist object. Then video is downloaded using the same logic as download_mp4(), but with for loop.
     If an error occurs, print exception.
     """
     try:
@@ -153,12 +164,12 @@ def download_playlist(url, path):
 
 
 """
-First ask you are downloading a video or an entire playlist.
+First asks if you are downloading a video or an entire playlist.
 
 If playlist:
     - Enter URL
     - Enter path to save video
-    - When done, ask you would like to download something else.
+    - When done, ask if you would like to download something else.
         * If yes, then go back to choosing between video or playlist
         * If no, then exit
 
@@ -167,7 +178,9 @@ If video:
     - Enter path to save video
     - Ask if you want to save thumbnail
     - Ask if you want to save as MP3 or MP4
-    - When done, ask if you want to download something else
+    - When done, ask if you woudl like to download something else.
+        * If yes, then go back to choosing between video or playlist
+        * If no, then exit
 
 """
 if __name__ == "__main__":
