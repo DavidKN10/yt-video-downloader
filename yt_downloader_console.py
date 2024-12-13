@@ -2,6 +2,7 @@ from pytubefix import YouTube, Playlist
 from pytubefix.cli import on_progress
 from pythumb import Thumbnail
 import os
+import subprocess
 
 
 def clean_filename(filename):
@@ -28,11 +29,22 @@ def download_mp4(url, path):
     try:
         yt = YouTube(url)
         video_title = clean_filename(yt.title)
-        stream = yt.streams.get_highest_resolution()
+        video_streams = (
+            yt.streams.filter(file_extension="mp4", 
+                              only_video=True, 
+                              res=["1080p", "720p", "360p", "240p", "144p"]).order_by("resolution").desc()
+        )
+        video_stream = video_streams.first()
 
+        audio_stream = yt.streams.filter(only_audio=True).order_by('abr').desc().first() 
         print("Video Title: ", video_title)
 
-        stream.download(output_path=path, filename=f"{video_title}.mp4")
+        print("Downloading video and audio")
+        video_stream.download(output_path=path, filename="video.mp4")
+        audio_stream.download(output_path=path, filename="audio.mp4")
+
+        merge_audio_video(f"{path}\\video.mp4", f"{path}\\audio.mp4", f"{path}\\{video_title}.mp4")
+
         print("Video downloaded successfully!")
         print(f"Saved as: {video_title}.mp4")
     except Exception as e:
@@ -50,11 +62,37 @@ def download_mp3(url, path):
 
         print("Video Title: ", video_title)
 
-        stream.download(output_path=path, filename=f"{video_title}.mp3", mp3=True)
+        stream.download(output_path=path, filename=f"{video_title}.mp3")
         print("Video downloaded successfully!")
         print(f"Saved as: {video_title}.mp3")
     except Exception as e:
         print("An error occurred: ", str(e))
+
+
+def merge_audio_video(video_file, audio_file, output_file):
+    print("Merging audio and video")
+
+    ffmpeg_cmd = [
+        "ffmpeg",
+        "-i", video_file,
+        "-i", audio_file,
+        "-c:v", "copy",
+        "-c:a", "aac",
+        "-strict", "experimental",
+        output_file
+    ]
+
+    try:
+        subprocess.run(ffmpeg_cmd, check=True)
+        print("Merging success!")
+        print("Cleaning Up")
+        os.remove(video_file)
+        os.remove(audio_file)
+        print("Cleaning success!")
+    except subprocess.CalledProcessError as e:
+        print("An error occurred: ", e)
+    except OSError as e:
+        print("An error occurred: ", e)
 
 
 def download_thumbnail(url, save_path):
@@ -94,9 +132,19 @@ def download_playlist(url, path):
 
         for video in playlist.videos:
             video_title = clean_filename(video.title)
-            print(f"Downloading: {video_title}")
-            stream = video.streams.get_highest_resolution()
-            stream.download(output_path=path, filename=f"{video_title}.mp4")
+            video_streams = (
+                video.streams.filter(file_extension="mp4",
+                                  only_video=True,
+                                  res=["1080p", "720p", "360p", "240p", "144p"]).order_by("resolution").desc()
+            )
+            video_stream = video_streams.first()
+            audio_stream = video.streams.filter(only_audio=True).order_by('abr').desc().first()
+
+            print("Downloading: ", video_title)
+            video_stream.download(output_path=path, filename="video.mp4")
+            audio_stream.download(output_path=path, filename="audio.mp4")
+
+            merge_audio_video(f"{path}\\video.mp4", f"{path}\\audio.mp4", f"{path}\\{video_title}.mp4")
 
         print("Done. Playlist downloaded successfully!")
 

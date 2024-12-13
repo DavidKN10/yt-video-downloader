@@ -180,7 +180,7 @@ def submit_playlist():
 
 
 window = Tk()
-window.iconbitmap("V33983897_on_X.ico")
+window.iconbitmap("icon.ico")
 window.geometry('800x800')
 window.minsize(800, 800)
 window.maxsize(800, 800)
