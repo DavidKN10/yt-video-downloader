@@ -5,6 +5,7 @@ from pytubefix import YouTube, Playlist
 from pythumb import Thumbnail
 from PIL import ImageTk, Image
 import os
+import subprocess
 
 
 file_location = None
@@ -31,9 +32,20 @@ def download_mp4(url, path):
         global title_video
         title_video.config(text=f"{video_title}")
 
-        stream = yt.streams.get_highest_resolution()
-        stream.download(output_path=path, filename=f"{video_title}.mp4")
+        video_streams = (
+            yt.streams.filter(file_extension="mp4",
+                              only_video=True,
+                              res=["1080p", "720p", "360p", "240p", "144p"]).order_by("resolution").desc()
+        )
+        video_stream = video_streams.first()
 
+        audio_stream = yt.streams.filter(only_audio=True).order_by('abr').desc().first()
+
+        video_stream.download(output_path=path, filename="video.mp4")
+        audio_stream.download(output_path=path, filename="audio.mp4")
+
+        merge_audio_video(f"{path}\\video.mp4", f"{path}\\audio.mp4", f"{path}\\{video_title}.mp4")
+ 
     except Exception as e:
         messagebox.showerror(title="Error", message=f"Error: {e}")
 
@@ -47,10 +59,31 @@ def download_mp3(url, path):
         global title_video
         title_video.config(text=f"{video_title}")
 
-        stream = yt.streams.get_highest_resolution()
-        stream.download(output_path=path, filename=f"{video_title}.mp3", mp3=True)
+        stream = yt.streams.get_audio_only()
+        stream.download(output_path=path, filename=f"{video_title}.mp3")
 
     except Exception as e:
+        messagebox.showerror(title="Error", message=f"Error: {e}")
+
+
+def merge_audio_video(video_file, audio_file, output_file):
+    ffmpeg_cmd = [
+        "ffmpeg",
+        "-i", video_file,
+        "-i", audio_file,
+        "-c:v", "copy",
+        "-c:a", "aac",
+        "-strict", "experimental",
+        output_file
+    ]
+
+    try:
+        subprocess.run(ffmpeg_cmd, check=True)
+        os.remove(video_file)
+        os.remove(audio_file)
+    except subprocess.CalledProcessError as e:
+        messagebox.showerror(title="Error", message=f"Error: {e}")
+    except OSError as e:
         messagebox.showerror(title="Error", message=f"Error: {e}")
 
 
@@ -180,7 +213,7 @@ def submit_playlist():
 
 
 window = Tk()
-window.iconbitmap("icon.ico")
+window.iconbitmap("src\\icon.ico")
 window.geometry('800x800')
 window.minsize(800, 800)
 window.maxsize(800, 800)
@@ -244,7 +277,7 @@ frame2.place(x=150, y=275)
 
 canvas = Canvas(frame2, height=300, width=500)
 canvas.grid(row=1, column=0)
-img = Image.open(f"V33983897_on_X.jpg").resize((460, 300))
+img = Image.open("src\\V33983897_on_X.jpg").resize((460, 300))
 imgTK = ImageTk.PhotoImage(img)
 canvas.create_image(20, 20, anchor=NW, image=imgTK)
 
