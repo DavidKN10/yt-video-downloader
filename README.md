@@ -10,79 +10,83 @@
 
 ---
 
-This program allows you to download the video and thumbnail of a YouTube video.
-This program uses python and the  [pytube](https://pytube.io/en/latest/#) and [pythumb](https://pypi.org/project/pythumb/) libraries to save the video and thumbnail. 
+This program allows you to download the video and thumbnail of a YouTube video or playlist. The videos are downloaded to the highest queallity up to 1080p. 
+This program uses Python and the  [pytubefix](https://pytubefix.readthedocs.io/en/latest/) and [pythumb](https://pypi.org/project/pythumb/) libraries to save the video and thumbnail. 
 
-There is also a different version of this program that allows you to use it in the command line.
-
+There is also a CLI version of the app.
 
 
 ### Features 
 
 ---
 
-* download a YouTube video to the highest resolution
+* download a YouTube video to the highest resolution up to 1080p
 * option to download the thumbnail of the video
 * download as either MP3 or MP4
 * choose location of where you want to save the files
+* download all videos on a playlist
 
-### How to Set Up GUI App
-
+### Prerequisites
 ---
-
-Once you have downloaded the folder, store it where ever you want. 
-However, make sure to keep the files on same location. Otherwise, you will encounter an error. 
-You can make a shortcut of the .exe file and move that shortcut outside the folder if you want.
-<br>
-
-Before you can use the app, you need to install ffmpeg.
+Before you can use the GUI or CLI apps, you need to install ffmpeg.
 <br>
 
 1.) First, go to [Chocolatey](https://chocolatey.org/install) and follow the instructions to install it.
 <br>
 2.) Once you have Chocolatey installed, you can go to the console and type the following:
-```commandline
-$ choco install ffmpeg-full
+```shell
+choco install ffmpeg-full
 ```
 <br>
 3.) You will be prompted to choose which scripts to run. Type "A" to run all. Let the installation finish. 
 <br>
 
-If you followed everything carefully, you should be able to use the applications now. 
+### How to Set Up GUI App
+
+---
+
+Once you have downloaded the zip file, decompress it and store it where ever you want. 
+However, make sure to keep the files in the locations that they are in. Otherwise, you will encounter errors. 
+You could make a shortcut of the .exe file and move that shortcut outside the folder if you want.
+<br>
+
+If you followed the prerequisites, you should be able to use the applications now. 
 
 ### How to Set Up Command Line Program
 
 ---
 
-Download "yt2mp4_console.py"
+Download "yt_downloader_cli.py"
 
-Make sure you also have [python](https://www.python.org/downloads/), pytube, and pythumb installed.
+Make sure you also have [python](https://www.python.org/downloads/), pytubefix, and pythumb installed.
 
 Instructions to download pythumb and pytube:
 
-```commandline
-$ pip install pytube
+```shell
+pip install pytubefix
 ```
 
-```commandline
-$ pip install pythumb
+```shell
+pip install pythumb
 ```
 
 Once you have everything installed, open the command line. Once there, 
-change to the directory of where the "yt2mp4_console.py" is saved.
+change to the directory of where the "yt_downloader_cli.py" is saved.
 
-```commandline
-$ cd (location where ytmp4_console.py is saved)
+```shell
+cd (location where yt_downloader_cli.py is saved)
 ```
 
-Now open the pyton file in the command line:
-```commandline
-$ python yt2mp4_console.py
+Now open the python file in the command line using Python:
+```shell
+python yt_downloader_cli.py
 ```
 
 ### How to Use the GUI App
 
 ---
+
+#### Videos
 
 In the entry box next to "Enter YouTube video URL", place the URL to the video.
 On the button that says "choose location", a window will open,
@@ -90,8 +94,7 @@ and you can go to the folder where you want to save the video.
 Next to "Save Thumbnail?" you will see a dropdown menu that will give you the options
 "Yes" and "No". If "Yes" is chosen, the thumbnail will be saved on the same location 
 where you are saving the video. If "No" is chosen, the thumbnail will not be saved. 
-Now, in the "Choose a Format" dropdown menu, you can choose between MP3 or MP4 and the 
-video will be saved in that format. 
+Now, in the "Choose a Format" dropdown menu, you can choose between MP3 or MP4 and the video will be saved in the chosen format. 
 
 <p>
     <img src="markdown files/window.jpg">
@@ -109,30 +112,34 @@ Once the video downloads, you will get the following window:
 If you click "Yes", the message window will close and you can continue downloading more videos.
 If you click "No", the message box will close and you will exit the program.
 
+#### Playlists
+
+
+
 ### How to Use the Command Line Program
 
 ---
 
 You will first be prompted to enter the URL of the video:
-```commandline
+```shell
 Enter the YouTube video URL: 
 ```
 Copy and paste the URL and hit enter. 
 Now you will be prompted to enter the directory to save the file.
-```commandline
+```shell
 Enter the YouTube video URL: 
 Enter the path to save the video: 
 ```
 After entering the location, you will be asked if you want to save the thumbnail.
 If you type "Y" or "y", the thumbnail will be saved. You can type anything else to decline. 
-```commandline
+```shell
 Enter the YouTube video URL: 
 Enter the path to save the video: 
 Do you want to save the thumbnail? (Y/N):
 ```
 After choosing to save the thumbnail or not, you will be prompted to enter the format you
 want to download the video as. Type "mp3" for mp3 or "mp4" for mp4.
-```commandline
+```shell
 Enter the YouTube video URL: 
 Enter the path to save the video: 
 Do you want to save the thumbnail? (Y/N):
@@ -141,7 +148,7 @@ Enter the video format(mp4/mp3):
 After entering yor option, the console will print out the name of the video with invalid characters removed. 
 Then the console will tell you if the video and thumbnail were downloaded successfully. 
 If the video did not download successfully, it will tell you what error it encountered. 
-```commandline
+```shell
 Enter the YouTube video URL: 
 Enter the video format(mp4/mp3): 
 Enter the path to save the video: 
@@ -154,7 +161,7 @@ Thumbnail downloaded successfully! Saved as '(name of image)'
 After the video downloads, you will prompted to choose whether you want to download another video or not.
 If you type "y", you will prompted to enter the URL and follow the same steps again. If you type "n", the 
 program will exit. 
-```commandline
+```shell
 Enter the YouTube video URL: (URL goes here)
 Enter the video format(mp4/mp3): (format goes here)
 Enter the path to save the video: (path goes here)
