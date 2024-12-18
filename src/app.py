@@ -134,89 +134,96 @@ def choose_location():
 
 
 def submit_video():
-    global url
-    url = url_entry.get()
+    try:
+        global url
+        url = url_entry.get()
 
-    global save
-    save = check_button_combobox.get()
+        global save
+        save = check_button_combobox.get()
 
-    global format
-    format = format_button_combobox.get()
+        global format
+        format = format_button_combobox.get()
 
-    while True:
-        video_url = url
-        save_path = file_location
-        save_thumbnail = save
-        video_format = format
+        while True:
+            video_url = url
+            save_path = file_location
+            save_thumbnail = save
+            video_format = format
 
-        if not os.path.exists(save_path):
-            os.makedirs(save_path)
+            if not os.path.exists(save_path):
+                os.makedirs(save_path)
 
-        download_thumbnail(url, save_path)
-        yt = YouTube(url, on_progress_callback=on_progress)
-        video_title = clean_filename(yt.title)
+            download_thumbnail(url, save_path)
+            yt = YouTube(url, on_progress_callback=on_progress)
+            video_title = clean_filename(yt.title)
 
-        canvas = Canvas(frame2, height=300, width=500)
-        canvas.grid(row=1, column=0)
-        img = Image.open(f"{save_path}/{video_title}.jpg").resize((500, 300))
-        imgTK = ImageTk.PhotoImage(img)
-        canvas.create_image(20, 20, anchor=NW, image=imgTK)
+            canvas = Canvas(frame2, height=300, width=500)
+            canvas.grid(row=1, column=0)
+            img = Image.open(f"{save_path}/{video_title}.jpg").resize((500, 300))
+            imgTK = ImageTk.PhotoImage(img)
+            canvas.create_image(20, 20, anchor=NW, image=imgTK)
 
-        if video_format == "MP4":
-            download_mp4(video_url, save_path)
-        elif video_format == "MP3":
-            download_mp3(video_url, save_path)
+            if video_format == "MP4":
+                download_mp4(video_url, save_path)
+            elif video_format == "MP3":
+                download_mp3(video_url, save_path)
 
-        answer = messagebox.askyesno(title="Message",
-                                     message="Done. Do you want to download another video?",
-                                     icon='info')
+            answer = messagebox.askyesno(title="Message",
+                                        message="Done. Do you want to download another video?",
+                                        icon='info')
 
-        if save_thumbnail == "No":
-            os.remove(f"{save_path}/{video_title}.jpg")
+            if save_thumbnail == "No":
+                os.remove(f"{save_path}/{video_title}.jpg")
 
-        if answer:
-            progress_bar['value'] = 0
-            percent_label.configure(text="0%")
+            if answer:
+                progress_bar['value'] = 0
+                percent_label.configure(text="0%")
 
-            global title_video
-            title_video.config(text="")
-            break
-        else:
-            window.quit()
-            break
+                global title_video
+                title_video.config(text="")
+                break
+            else:
+                window.quit()
+                break
+
+    except Exception as e:
+        messagebox.showerror(title="Error", message=f"Error: {e}")
 
 
 def submit_playlist():
-    global url
-    url = p_url_entry.get()
+    try:
+        global url
+        url = p_url_entry.get()
 
-    while True:
-        playlist_url = url
-        save_path = file_location
+        while True:
+            playlist_url = url
+            save_path = file_location
 
-        if not os.path.exists(save_path):
-            os.makedirs(save_path)
+            if not os.path.exists(save_path):
+                os.makedirs(save_path)
 
-        download_playlist(playlist_url, save_path)
+            download_playlist(playlist_url, save_path)
 
-        answer = messagebox.askyesno(title="Message",
-                                     message="Done. Do you want to download something else?",
-                                     icon='info')
+            answer = messagebox.askyesno(title="Message",
+                                        message="Done. Do you want to download something else?",
+                                        icon='info')
 
-        if answer:
-            download_progress.config(text="")
-            break
-        else:
-            window.quit()
-            break
-
+            if answer:
+                download_progress.config(text="")
+                break
+            else:
+                window.quit()
+                break
+    
+    except Exception as e:
+        messagebox.showerror(title="Error", message=f"Error: {e}")
 
 
 window = Tk()
 window.iconbitmap("src\\icon.ico")
-window.geometry('800x800')
-window.minsize(800, 800)
-window.maxsize(800, 800)
+window.geometry('750x750')
+window.minsize(750, 750)
+window.maxsize(750, 750)
 window.title("YouTube Downloader by Noaxadd")
 
 notebook = ttk.Notebook(window)
